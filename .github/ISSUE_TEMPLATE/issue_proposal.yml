@@ -1,7 +1,7 @@
 name: Propuesta de cambio
 description: Crear una propuesta formal de cambio técnico
 title: "[Propuesta]: "
-labels: [estado:pendiente]
+labels: [Pending]
 assignees: []
 
 body:

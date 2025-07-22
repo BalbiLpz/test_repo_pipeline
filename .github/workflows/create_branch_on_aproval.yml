@@ -1,33 +1,36 @@
-name: Crear rama al aprobar issue
+name: Create Branch from Approved Issue
 
 on:
   issues:
-    types: [labeled]
-
-permissions:
-  contents: write  # Necesario para crear ramas
+    types:
+      - labeled
 
 jobs:
   create-branch:
-    if: github.event.label.name == 'estado:aprobada'
+    if: github.event.label.name == 'Approved'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      issues: read
+
     steps:
-      - name: Extraer nombre de la issue
-        id: vars
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Extract branch name from issue
+        id: extract
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
-          RAW_TITLE="${{ github.event.issue.title }}"
-          # Normalizar el título: quitar espacios, acentos, etc.
-          SLUG=$(echo "$RAW_TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/ /-/g' -e 's/[^a-z0-9-]//g')
-          BRANCH_NAME="feature/${ISSUE_NUMBER}-${SLUG}"
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          SAFE_TITLE=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -dc 'a-z0-9\-')
+          BRANCH_NAME="issue-${ISSUE_NUMBER}-${SAFE_TITLE}"
+          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout repositorio
-        uses: actions/checkout@v4
-
-      - name: Crear nueva rama desde main
+      - name: Create and push branch
         run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
-          git checkout -b ${{ steps.vars.outputs.branch_name }} origin/main
-          git push origin ${{ steps.vars.outputs.branch_name }}
+          git checkout -b ${{ steps.extract.outputs.branch_name }} origin/main
+          git push origin ${{ steps.extract.outputs.branch_name }}
