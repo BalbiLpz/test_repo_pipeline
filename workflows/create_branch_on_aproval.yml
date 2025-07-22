@@ -1,0 +1,33 @@
+name: Crear rama al aprobar issue
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write  # Necesario para crear ramas
+
+jobs:
+  create-branch:
+    if: github.event.label.name == 'estado:aprobada'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Extraer nombre de la issue
+        id: vars
+        run: |
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          RAW_TITLE="${{ github.event.issue.title }}"
+          # Normalizar el título: quitar espacios, acentos, etc.
+          SLUG=$(echo "$RAW_TITLE" | tr '[:upper:]' '[:lower:]' | sed -e 's/ /-/g' -e 's/[^a-z0-9-]//g')
+          BRANCH_NAME="feature/${ISSUE_NUMBER}-${SLUG}"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Crear nueva rama desde main
+        run: |
+          git fetch origin main
+          git checkout -b ${{ steps.vars.outputs.branch_name }} origin/main
+          git push origin ${{ steps.vars.outputs.branch_name }}
