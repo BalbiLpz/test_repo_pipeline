@@ -21,4 +21,4 @@ If you want to learn more about creating good readme files then refer the follow
 
 ## 💡 Crear una propuesta
 
-[📝 Crear nueva propuesta](../../issues/new?template=propuesta-cambio.yml)
+[📝 Crear nueva propuesta](../../issues/new?template=issue-propoisal.yml)
