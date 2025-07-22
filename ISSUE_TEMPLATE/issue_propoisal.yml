@@ -1,7 +1,7 @@
-name: Propuesta de cambio técnico
-description: Describe una propuesta para nuevos adaptadores o modificaciones de interfaz
+name: Propuesta de cambio
+description: Crear una propuesta formal de cambio técnico
 title: "[Propuesta]: "
-labels: ["estado:pendiente"]
+labels: [estado:pendiente]
 assignees: []
 
 body:
@@ -9,37 +9,45 @@ body:
     id: tipo-cambio
     attributes:
       label: Tipo de cambio
-      description: Selecciona el tipo de cambio que deseas proponer
+      description: Selecciona el tipo de cambio propuesto
       options:
         - Nuevo adaptador
         - Mejora de adaptador existente
         - Modificación de interfaz
+      multiple: false
     validations:
       required: true
 
   - type: textarea
     id: descripcion-tecnica
     attributes:
-      label: Descripción técnica detallada
-      description: Explica de forma detallada el propósito del cambio técnico propuesto
-      placeholder: Describe qué quieres modificar y cómo lo harás
+      label: Descripción técnica
+      description: Explica detalladamente los cambios propuestos
     validations:
       required: true
 
   - type: textarea
-    id: justificacion-funcional
+    id: justificacion
     attributes:
       label: Justificación funcional o valor agregado
-      description: Especifica qué aporta tu propuesta (por ejemplo, cumplimiento con un estándar)
-      placeholder: ¿Por qué este cambio es útil o necesario?
+      description: Indica el valor funcional del cambio (ej. estándar de industria, mejora de interoperabilidad, etc.)
     validations:
       required: true
 
   - type: textarea
-    id: verificacion-no-duplicado
+    id: verificacion
     attributes:
-      label: Verificación de no duplicidad
-      description: Explica cómo verificaste que esta propuesta no existe ya en otra issue
-      placeholder: Por ejemplo, búsqueda de issues similares por título o contenido
+      label: Verificación de propuesta existente
+      description: Explica cómo has validado que no existe una propuesta equivalente
     validations:
       required: true
+
+  - type: checkboxes
+    id: alcance
+    attributes:
+      label: Alcance del cambio
+      description: Selecciona las áreas que afecta
+      options:
+        - label: Interfaz
+        - label: Adaptador
+        - label: Interfaz y Adaptador
